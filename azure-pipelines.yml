@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo 'Starting CI pipeline'
+  displayName: 'Initialize CI'
+
+- script: |
+    "C:\Users\oumai\Downloads\flutter\bin\flutter.bat" pub get
+  displayName: 'Flutter pub get'
+
+
+- script: flutter test
+  displayName: 'Run Flutter tests'
+
+- script: flutter drive --target=test_driver/app.dart
+  displayName: 'Run Flutter integration tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/test-results.xml'
+    failTaskOnFailedTests: true
+  displayName: 'Publish test results'
+
+- script: echo 'CI pipeline completed'
+  displayName: 'Complete CI'

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+    http {
+        server {
+            listen 80;
+            server_name localhost;
+
+            location / {
+                proxy_pass http://flutter-app-service;  # Change to your Flutter app's address
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+        }
+    }

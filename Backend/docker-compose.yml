@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  api_service:
+    image: fitfolio:1.0  
+    restart: always
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DB=fitfoliofin
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      retries: 3
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=fitfoliofin
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
